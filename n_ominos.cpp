@@ -29,10 +29,6 @@
 
 /*................................... TYPES ...............................*/
 
-typedef unsigned char            uint8;
-typedef unsigned __int64          uint64;
-
-
 // This type represents one possible combination of each direction (North,
 // East, South, West).
 struct DIR_COMB
@@ -73,7 +69,7 @@ struct POINT
 /*................................. CONSTANTS .............................*/
 
 // Limit on number of squares.
-const kLimit = 7;
+const int kLimit = 7;
 
 
 // These are all the possible combinations of the directions, as well as
@@ -98,7 +94,7 @@ const DIR_COMB kDirComb[] =
 
 
 // The total number of possible direction combinations.
-const kNumDirComb = ARRAY_LENGTH(kDirComb);
+const int kNumDirComb = ARRAY_LENGTH(kDirComb);
 
 
 // Vectors for translating North, East, South, West into grid vectors.
@@ -119,8 +115,8 @@ class Grid8x8
 {
   union BITS
   {
-    uint64  ui64;
-    uint8  ui8[8];
+    uint64_t  ui64;
+    uint8_t  ui8[8];
   };
 
   BITS _bits;
@@ -157,7 +153,7 @@ class N_Omino
   int _squaresLeft;
 
   bool Add(const VECT& kVec);
-  Follow(const VECT& kVec);
+  void Follow(const VECT& kVec);
 
 public:
   N_Omino(int N);
@@ -167,15 +163,15 @@ public:
   bool AddSouth();
   bool AddWest();
 
-  FollowNorth();
-  FollowEast();
-  FollowSouth();
-  FollowWest();
+  void FollowNorth();
+  void FollowEast();
+  void FollowSouth();
+  void FollowWest();
 
-  Draw(int row) const;
-  Draw() const;
+  void Draw(int row) const;
+  void Draw() const;
 
-  Normalize();
+  void Normalize();
 
   int Comp(const N_Omino& a) const;
 
@@ -216,10 +212,10 @@ POINT operator+(const POINT& p, const VECT& v)
 // Returns:      The rotated value.
 //
 //***********************************************************************
-uint8 RightRotate8(uint8 val, int rot)
+uint8_t RightRotate8(uint8_t val, int rot)
 {
-  uint8 tmp1 = val;
-  uint8 tmp2 = val;
+  uint8_t tmp1 = val;
+  uint8_t tmp2 = val;
 
   tmp1 = val >> rot;
   tmp2 = val << (8 - rot);
@@ -241,10 +237,10 @@ uint8 RightRotate8(uint8 val, int rot)
 // Returns:      The rotated value.
 //
 //***********************************************************************
-uint64 LeftRotate64(uint64 val, int rot)
+uint64_t LeftRotate64(uint64_t val, int rot)
 {
-  uint64 tmp1 = val;
-  uint64 tmp2 = val;
+  uint64_t tmp1 = val;
+  uint64_t tmp2 = val;
 
   tmp1 = val << rot;
   tmp2 = val >> (64 - rot);
@@ -480,7 +476,7 @@ bool N_Omino::AddWest()
 //              method adds a new square to this object.
 // Parameters:  kVec : the direction vector.
 //***********************************************************************
-N_Omino::Follow(const VECT& kVec)
+void N_Omino::Follow(const VECT& kVec)
 {
   _pos = _pos + kVec;
 } // N_Omino::Follow
@@ -492,7 +488,7 @@ N_Omino::Follow(const VECT& kVec)
 // Description:  See N_Omino::Follow();
 //
 //***********************************************************************
-N_Omino::FollowNorth()
+void N_Omino::FollowNorth()
 {
   Follow(kVecNorth);
 } // N_Omino::FollowNorth
@@ -504,7 +500,7 @@ N_Omino::FollowNorth()
 // Description:  See N_Omino::Follow();
 //
 //***********************************************************************
-N_Omino::FollowEast()
+void N_Omino::FollowEast()
 {
   Follow(kVecEast);
 } // N_Omino::FollowEast
@@ -516,7 +512,7 @@ N_Omino::FollowEast()
 // Description:  See N_Omino::Follow();
 //
 //***********************************************************************
-N_Omino::FollowSouth()
+void N_Omino::FollowSouth()
 {
   Follow(kVecSouth);
 } // N_Omino::FollowSouth
@@ -528,7 +524,7 @@ N_Omino::FollowSouth()
 // Description:  See N_Omino::Follow();
 //
 //***********************************************************************
-N_Omino::FollowWest()
+void N_Omino::FollowWest()
 {
   Follow(kVecWest);
 } // N_Omino::FollowWest
@@ -540,7 +536,7 @@ N_Omino::FollowWest()
 // Description:  Draw one row of the n-omino encapsulated by this object.
 //
 //***********************************************************************
-N_Omino::Draw(int row) const
+void N_Omino::Draw(int row) const
 {
   POINT pt = { 0, row };
 
@@ -559,7 +555,7 @@ N_Omino::Draw(int row) const
 // Description:  Draw the n-omino encapsulated by this object.
 //
 //***********************************************************************
-N_Omino::Draw() const
+void N_Omino::Draw() const
 {
   printf("\n\n");
 
@@ -583,7 +579,7 @@ N_Omino::Draw() const
 //              points is 0.
 //
 //***********************************************************************
-N_Omino::Normalize()
+void N_Omino::Normalize()
 {
   VECT trans = { -_extent1.x, -_extent1.y };
   _grid.Translate(trans);
@@ -663,7 +659,7 @@ void N_OminosDraw(const T& n_ominos)
 {
   int n = 0;
 
-  T::const_iterator i;
+  typename T::const_iterator i;
   for (i = n_ominos.begin(); i != n_ominos.end(); ++i)
   {
     i->Draw();
@@ -784,7 +780,7 @@ void N_OminosGenerateImp(T& n_ominos, N_Omino n_omino)
 // Returns:      0 if N is outside the range [1..7].
 //
 //***********************************************************************
-int N_OminosGenerate(const N)
+int N_OminosGenerate(const int N)
 {
   if ((1 <= N) && (N <= kLimit))
   {
@@ -798,7 +794,7 @@ int N_OminosGenerate(const N)
     n_ominos.sort();
     n_ominos.unique();
 
-    printf("n_ominoes = %u\n", n_ominos.size());
+    printf("n_ominoes = %lu\n", n_ominos.size());
 
     N_OminosDraw(n_ominos);
 
@@ -821,7 +817,7 @@ int main(int argc, char* argv[])
 {
   if (argc == 2)
   {
-    const N = atoi(argv[1]);
+    const int N = atoi(argv[1]);
 
     if (N_OminosGenerate(N))
     {
