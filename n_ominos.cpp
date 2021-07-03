@@ -794,7 +794,7 @@ int N_OminosGenerate(const int N)
     n_ominos.sort();
     n_ominos.unique();
 
-    printf("n_ominoes = %lu\n", n_ominos.size());
+    printf("n_ominoes = %d\n", (int)n_ominos.size());
 
     N_OminosDraw(n_ominos);
 
